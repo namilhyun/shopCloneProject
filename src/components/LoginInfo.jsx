@@ -24,7 +24,7 @@ export default function LoginInfo(){
                     <button onClick={logout} style={{color:"white"}}>로그아웃</button>
                 </>
             ) : (
-                <button onClick={login}>로그인</button>
+                <button onClick={login} style={{color:"white"}}>로그인</button>
             )}
         </>
     )
