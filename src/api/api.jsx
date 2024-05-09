@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
-import { getDatabase } from "firebase/database";
+import { getDatabase, ref as databaseRef, set, get, query, orderByChild, equalTo } from "firebase/database";
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { adminUser } from "@/service/admin";
 import { v4 as uuid } from 'uuid'
@@ -33,7 +33,7 @@ export async function googleLogin(){
         // signInWithPopup(auth,provider) : firebase 자체에 있는 인증 객체
         // provider를 인자로 받아서 google계정을 연동해서 로그인 할 수 있게 하는 메서드
         const user = result.user;
-        console.log(user)
+        // console.log(user)
         return user;
     }catch (error){
         console.error(error)
@@ -72,7 +72,7 @@ export async function uploadImg(file) {
     try {
         const id = uuid();
         const imgRef = storageRef(storage, `imges/${id}`)
-        console.log(imgRef)
+        // console.log(imgRef)
         await uploadBytes(imgRef, file)
         const imgUrl = await getDownloadURL(imgRef)
         return imgUrl
@@ -80,5 +80,71 @@ export async function uploadImg(file) {
         console.error(error)
     }
 }
+
+export async function addProducts(product, imgUrl){
+    try{
+        const id = uuid();
+        await set(databaseRef(database, `products/${id}`),{
+            ...product,
+            id,
+            img : imgUrl,
+            price : parseInt(product.price)
+        })
+    }catch(error){
+        console.error(error)
+    }
+}
+// 이미지 링크와 함께 상품을 데이터베이스에 등록
+
+export async function getProducts(){
+    try{
+        const snapshot = await get(databaseRef(database,'products'));
+        if(snapshot.exists()){
+            return Object.values(snapshot.val())
+        }else{
+            return []
+        }
+    }catch(error){
+        console.error(error)
+        return []
+    }
+}
+// 데이터베이스에 등록된 상품 리스트를 가져오기
+
+// export async function getCategoryProduct(category){
+//     try{
+//         return get(databaseRef(database,'products')).then((snapshot)=>{
+//             if(snapshot.exists()){
+//                 const allProduct = Object.values(snapshot.val());
+//                 const filterProduct = allProduct.filter((product)=>product.category === category)
+//                 return filterProduct
+//             }else{
+//                 return []
+//             }
+//         })
+//     }catch(error){
+//         console.error(error)
+//         return []
+//     }
+// }
+
+export async function getCategoryProduct(category){
+    try{
+        const productRef = databaseRef(database, 'products');
+
+        // category를 기준으로 쿼리를 생성하고 주어진 값이 전송받은 category와 같은 값만 조회
+        const q = query(productRef,orderByChild('category'), equalTo(category))
+        const snapshot = await get(q);
+        if(snapshot.exists()){
+            return Object.values(snapshot.val())
+        }else{
+            return [];
+        }
+    }catch(error){
+        console.error(error)
+        return []
+    }
+}
+
 
 export { database }

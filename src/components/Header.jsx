@@ -5,6 +5,7 @@
 import Link from "next/link"
 import styled from "styled-components"
 import LoginInfo from "./LoginInfo"
+import MainMenu from "./MainMenu"
 
 export default function Header(){
     return (
@@ -12,6 +13,7 @@ export default function Header(){
             <h1 className="logo">
                 <Link href='/'>shop</Link>
             </h1>
+            <MainMenu/>
             <LoginInfo/>
         </HeaderContainer>
     )

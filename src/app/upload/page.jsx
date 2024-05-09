@@ -1,16 +1,22 @@
 
 "use client"
-import { uploadImg } from "@/api/api";
+// nextjs13버전부터 생긴 요소로 컴포넌트가 클라이언트 측에서만 실행되도록 조건을 설정
+import { addProducts, uploadImg } from "@/api/api";
 import { CategoryContext } from "@/utils/categoryContext";
 import { getDownloadURL, uploadBytes } from "firebase/storage";
-// nextjs13버전부터 생긴 요소로 컴포넌트가 클라이언트 측에서만 실행되도록 조건을 설정
 
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import styled from "styled-components";
 
 export default function UploadPage(){
 
     const [file, setFile] = useState(null);
+    const [isLoding, setIsLoding] = useState(false);
+    const [success, setSuccess] = useState(null);
+    const [error, setError] = useState(null);
+
+    const fileRef = useRef();
+    // 파일에 있는 값을 비울때에는 ref로 돔을 직접적으로 조작해야함
 
     const {categoryList} = useContext(CategoryContext)
 
@@ -65,9 +71,30 @@ export default function UploadPage(){
     const uploadSubmit = async (e) => {
         e.preventDefault();
         try{
-            const url = await uploadImg(file)
+            const url = await uploadImg(file);
+            await addProducts(product,url);
+            setSuccess('업로드가 완료되었습니다.')
+            setTimeout(()=>{
+                setSuccess(null)
+            },2000)
+            setFile(null)
+            setProduct({
+                title : '',
+                price : '',
+                option : '',
+                category : '',
+                colors : [],
+            })
+
+            if(fileRef.current){
+                fileRef.current.value = '';
+            }
         }catch(error){
             console.error(error)
+            setError('업로드에 실패했습니다.')
+        }finally{
+        // finally : try와 catch가 실행되고 무조건적으로 실행되는 블록 
+            setIsLoding(false);
         }
     }
     // 업로드
@@ -143,7 +170,11 @@ export default function UploadPage(){
                     ))}
                 </ColorSelect>
 
-                <button className="resultBtn">업로드</button>
+                <button className="resultBtn" disabled={isLoding}>
+                    {isLoding ? '업로드 중' : '제품 등록하기'}    
+                </button>
+                {success && ( <p>{success}</p>)}
+                {error && ( <p>{error}</p>)}
                 {/* 업로드 버튼 */}
 
             </form>

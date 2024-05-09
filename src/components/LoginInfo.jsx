@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function LoginInfo(){
     const [user,setUser] = useState(null)
-    console.log(user)
+    // console.log(user)
     // 로그인된 사용자 정보를 받아올 상태값
 
     const login = async ()=>{
