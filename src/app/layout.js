@@ -3,8 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Registry as StyleComponentRegistry } from "@/style/registry";
 import Header from "@/components/Header";
+import { AuthContextProvider } from "@/context/authContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const queryClient = new QueryClient();
 
 export const metadata = {
   title: "Create Next App",
@@ -13,13 +17,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko">
-      <body className={inter.className}>
-        <Header/>
-        <StyleComponentRegistry>
-          {children}
-        </StyleComponentRegistry>
-      </body>
-    </html>
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+            <html lang="ko">
+
+              <body className={inter.className}>
+                <Header/>
+                <StyleComponentRegistry>{children}</StyleComponentRegistry>
+              </body>
+              
+            </html>
+        </AuthContextProvider>
+      </QueryClientProvider>
   );
 }

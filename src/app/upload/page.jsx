@@ -11,7 +11,7 @@ import styled from "styled-components";
 export default function UploadPage(){
 
     const [file, setFile] = useState(null);
-    const [isLoding, setIsLoding] = useState(false);
+    const [isLoding, setIsLoading] = useState(false);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
 
@@ -94,7 +94,7 @@ export default function UploadPage(){
             setError('업로드에 실패했습니다.')
         }finally{
         // finally : try와 catch가 실행되고 무조건적으로 실행되는 블록 
-            setIsLoding(false);
+            setIsLoading(false);
         }
     }
     // 업로드

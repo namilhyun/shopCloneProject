@@ -6,6 +6,8 @@ const nextConfig = {
     compiler : {
         styledComponents : true
     }
+    // reactStrictMode : false,
+    // reactStrictMode 기본값 : true
 };
 
 export default nextConfig;

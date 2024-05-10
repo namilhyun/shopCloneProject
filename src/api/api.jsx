@@ -111,23 +111,27 @@ export async function getProducts(){
 }
 // 데이터베이스에 등록된 상품 리스트를 가져오기
 
-// export async function getCategoryProduct(category){
-//     try{
-//         return get(databaseRef(database,'products')).then((snapshot)=>{
-//             if(snapshot.exists()){
-//                 const allProduct = Object.values(snapshot.val());
-//                 const filterProduct = allProduct.filter((product)=>product.category === category)
-//                 return filterProduct
-//             }else{
-//                 return []
-//             }
-//         })
-//     }catch(error){
-//         console.error(error)
-//         return []
-//     }
-// }
+/*
+클라이언트 필터링버전
+export async function getCategoryProduct(category){
+    try{
+        return get(databaseRef(database,'products')).then((snapshot)=>{
+            if(snapshot.exists()){
+                const allProduct = Object.values(snapshot.val());
+                const filterProduct = allProduct.filter((product)=>product.category === category)
+                return filterProduct
+            }else{
+                return []
+            }
+        })
+    }catch(error){
+        console.error(error)
+        return []
+    }
+}
+*/
 
+//서버측 필터링
 export async function getCategoryProduct(category){
     try{
         const productRef = databaseRef(database, 'products');
@@ -146,5 +150,40 @@ export async function getCategoryProduct(category){
     }
 }
 
+export async function getProductId(productId){
+    try{
+        const productRef = databaseRef(database, `products/${productId}`)
+        const snapshot = await get(productRef)
+        if(snapshot.exists()){
+            return snapshot.val()
+        }
+    }catch(error){
+        console.error(error);
+    }
+}
+// 디테일 페이지에서 전달받은 제품 id를 이용해서 database에 있는 동일한 id의 제품과 매칭
+
+export async function getCart(userId){
+    try{
+        const snapshot = await (get(databaseRef(database,`cart/${userId}`)))
+        if(snapshot.exists()){
+            const item = snapshot.val();
+            return Object.values(item)
+        }else{
+            return []
+        }
+    }catch(error){
+        console.error(error);
+    }
+}
+
+export async function updateCart(userId, product){
+    try{
+        const cartRef = databaseRef(database,`cart/${userId}/${product.id}`)
+        await set(cartRef, product);
+    }catch(error){
+        console.error(error);
+    }
+}
 
 export { database }
