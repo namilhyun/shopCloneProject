@@ -195,5 +195,33 @@ export async function updateCart(userId, product){
 export async function removeCart(userId, productId){
     return remove (databaseRef(database,`cart/${userId}/${productId}`));
 }
+// 장바구니 리스트 삭제
+
+export async function getSearchProducts(text){
+    try{
+        const dbRef = databaseRef(database,'products')
+        const snapshot = await get(dbRef)
+        if(snapshot.exists()){
+            const data = snapshot.val();
+            const allProducts = Object.values(data)
+            // console.log(allProducts)
+            if(allProducts.length === 0){
+                // 오류처리
+                return []
+            }
+            const matchProducts = allProducts.filter((product)=>{
+                const itemTitle = product.title;
+                // console.log(itemTitle)
+                return itemTitle.includes(text)
+            })
+            return matchProducts
+        }else{
+            return []
+        }
+    }catch(error){
+        console.error(error);
+    }
+}
+// 검색 상품
 
 export { database }

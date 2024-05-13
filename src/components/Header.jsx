@@ -6,7 +6,7 @@ import Link from "next/link"
 import styled from "styled-components"
 import LoginInfo from "./LoginInfo"
 import MainMenu from "./MainMenu"
-import { IoCartOutline } from "react-icons/io5";
+import { IoCartOutline, IoSearch } from "react-icons/io5";
 import { useAuthContext } from "@/context/authContext"
 import { googleLogin } from "@/api/api"
 
@@ -28,6 +28,7 @@ export default function Header(){
             <MainMenu/>
             <LoginInfo/>
             <Link href='/cart' onClick={handleCartClick}><IoCartOutline /></Link>
+            <Link href='/search'><IoSearch /></Link>
         </HeaderContainer>
     )
 }
