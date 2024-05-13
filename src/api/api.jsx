@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
-import { getDatabase, ref as databaseRef, set, get, query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, ref as databaseRef, set, get, query, orderByChild, equalTo, remove } from "firebase/database";
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { adminUser } from "@/service/admin";
 import { v4 as uuid } from 'uuid'
@@ -178,12 +178,22 @@ export async function getCart(userId){
 }
 
 export async function updateCart(userId, product){
+    if(!userId || !product || !product.id){
+        console.error(error);
+        return
+    }
     try{
         const cartRef = databaseRef(database,`cart/${userId}/${product.id}`)
+        console.log(product)
         await set(cartRef, product);
+        
     }catch(error){
         console.error(error);
     }
+}
+
+export async function removeCart(userId, productId){
+    return remove (databaseRef(database,`cart/${userId}/${productId}`));
 }
 
 export { database }

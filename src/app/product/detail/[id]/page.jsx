@@ -62,20 +62,48 @@ export default function ProductDtailPage(){
             alert('로그인이 필요합니다')
             // alert : 프롬프트창
             googleLogin()
+            return
         }
 
-        const {image, title, price} = product;
-        const itemAddOption = {
-            id,
-            image,
-            title,
-            price,
-            option : selected,
-            color : selectedColor,
-            quantity : 1
-            // quantity : 수량
+        if(!selectedColor || !selected){
+            alert('옵션이 선택되지 않았습니다.')
+            return
         }
-        addItemCart(itemAddOption);
+
+        if(type === '장바구니'){
+            const productToAdd = {
+                id : product.id,
+                title : product.title,
+                price : product.price,
+                image : product.img,
+                option : selected,
+                color : selectedColor,
+                quantity : 1
+            }
+            addItemCart.mutate(productToAdd,{
+                onSuccess : ()=>{
+                    alert('장바구니에 추가되었습니다.')
+                },
+                onError : (error)=>{
+                    alert('장바구니 추가에 실패했습니다.')
+                    console.error(error)
+                }
+            })
+        }
+
+
+        // const {image, title, price} = product;
+        // const itemAddOption = {
+        //     id,
+        //     image,
+        //     title,
+        //     price,
+        //     option : selected,
+        //     color : selectedColor,
+        //     quantity : 1
+        //     // quantity : 수량
+        // }
+        // addItemCart(itemAddOption);
     }
 
     if(isLoading) return <p>로딩중입니다.</p>
@@ -112,8 +140,8 @@ export default function ProductDtailPage(){
                     ))}
                 </div>
                 <div className="detailBtns">
-                    <button className="cartBtn" onClick={()=>handleActionClick('장바구니 담기')}>장바구니 담기</button>
-                    <button className="buyBtn" onClick={()=>handleActionClick('구매하기')}>구매하기</button>
+                    <button className="cartBtn" onClick={()=>handleActionClick('장바구니')}>장바구니 담기</button>
+                    <button className="buyBtn" onClick={()=>handleActionClick('구매')}>구매하기</button>
                 </div>
             </div>
         </DetailPage>
