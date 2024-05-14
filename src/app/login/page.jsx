@@ -64,11 +64,11 @@ export default function LoginPage(){
                 
                 <button>로그인</button>
 
-                <button onClick={googleLoginEvent}>구글로그인</button>
 
                 {error && <span className="errorText">{error}</span>}
                 
             </form>
+            <button onClick={googleLoginEvent}>구글로그인</button>
         </Container>
     )
 }
