@@ -113,7 +113,7 @@ export default function ProductDtailPage(){
     return (
         <DetailPage>
             <div className="detailImg">
-                <Image src={product.img} width={'300'} height={'300'} layout="responsive" alt={product.id}/>
+                <img src={product.img} alt={product.id}/>
             </div>
             <div className="detailTextWrap">
                 <h3>{product.title}</h3>
