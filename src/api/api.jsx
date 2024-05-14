@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { getDatabase, ref as databaseRef, set, get, query, orderByChild, equalTo, remove } from "firebase/database";
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { adminUser } from "@/service/admin";
@@ -223,5 +223,35 @@ export async function getSearchProducts(text){
     }
 }
 // 검색 상품
+
+
+export async function joinEmail(email, password, name){
+    const auth = getAuth(); 
+    try{
+        const userData = await createUserWithEmailAndPassword(auth, email, password)
+        // createUserWithEmailAndPassword : 이메일과 비밀번호를 이용해 회원가입하는 메서드
+        const user = userData.user;
+        await updateProfile(user,{
+            displayName : name
+        })
+        await signOut(auth);
+        // signOut : auth메서드
+        return {success : true}
+    }catch(error){
+        console.error(error);
+    }
+}
+// 이메일 회원가입
+
+
+export async function loginEmail(email, password){
+    try{
+        const userData = await signInWithEmailAndPassword(auth, email, password)
+        return userData.user
+    }catch (error){
+        console.error(error)
+    }
+}
+// 이메일 로그인
 
 export { database }

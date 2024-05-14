@@ -1,5 +1,9 @@
+
+"use client"
+
 import { googleLogin, googleLogout, onUserState } from "@/api/api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 
@@ -7,15 +11,14 @@ export default function LoginInfo(){
     const [user,setUser] = useState(null)
     // console.log(user)
     // 로그인된 사용자 정보를 받아올 상태값
+    const router = useRouter()
 
     const login = async ()=>{
-        googleLogin().then(setUser)
-        // .then : ?
+        router.push('/login')
     }
     
     const logout = async ()=>{
         googleLogout().then(setUser)
-        // .then : ?
     }
 
     useEffect(()=>{

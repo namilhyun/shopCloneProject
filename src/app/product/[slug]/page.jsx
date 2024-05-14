@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import NoProduct from "./NoProduct";
+import CategorySlider from "@/components/CategorySlider";
 
 // 카테고리별로 아이템을 구분해서 출력
 /*
@@ -22,9 +23,9 @@ export default function CategoryPage(){
     const pathName = usePathname();
 
     const slug = pathName.split('/').pop();
-    console.log(slug)
 
     const [products, setProduct] = useState([]);
+    const [randomImages, setRandomImages] = useState([]);
 
     useEffect(()=>{
         getCategoryProduct(slug).then((product)=>{
@@ -33,11 +34,29 @@ export default function CategoryPage(){
             console.error(error)
         })
     },[slug])
-    console.log(products)
+    
+    
+    // console.log(products)
+    useEffect(()=>{
+        if(products.length > 0){
+            const randomImg = [...products].sort(()=> 0.5 - Math.random())
+            // .sort(()=> 0.5 - Math.random()) : 랜덤 정렬을 위한 로직
+            // sort() : 배열 정렬하기
+            console.log(randomImg)
+            
+            const selectImg = randomImg.slice(0,6).map((el)=>el.img);
+            setRandomImages(selectImg)
+        }
+    },[products])
+
+
+    
     
     return(
         <Container>
             <h2>{slug}페이지</h2>
+            <CategorySlider imgs={randomImages}/>
+            
             {products.length > 0 ? (
                 <CategoryProductList slug={slug} products={products}/>
                 ) : (

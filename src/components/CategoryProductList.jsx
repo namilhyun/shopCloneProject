@@ -3,7 +3,6 @@ import Product from "./Product";
 
 export default function CategoryProductList({slug, products}){
     const [product, setProducts] = useState(products)
-    console.log(product)
     useEffect(()=>{
         setProducts(products)
     },[products])
