@@ -29,7 +29,7 @@ export default function CartItem({product, index}){
     return (
         <li>
             <p>{index}</p>
-            <img src={product.image} alt={product.title} />
+            <img src={product.image} alt={product.title}/>
             <p className="cartItemTitle">상품명 : {product.title}</p>
             <p className="cartItemOpt">옵션 : {product.option}</p>
             <div className="cartItemColor">

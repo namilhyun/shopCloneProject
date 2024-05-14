@@ -24,7 +24,7 @@ export default function ProductItem({product}){
     
     return(
         <DetailItem onClick={detailNavigate}>
-            <img src={product.img} alt="{product.title}" />
+            <img src={product.img} alt={product.title}/>
             <TextWrap>
                 <h3 className="itemTitle">{product.title}</h3>
                 <div className="itemFlex">
